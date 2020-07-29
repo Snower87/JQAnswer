@@ -13,7 +13,7 @@
 3. Какие данные могут хранить коллекции?
 
 4. Какие есть типы коллекций? Как они характеризуются?
-4.1 List - список, динамический массив. Объекты хранятся в порядке их добавления.
+4.1 List - список, динамически изменяемый массив. Объекты хранятся в порядке их добавления.
 4.2 Set - набор, исключает повторы (дубляжи).
 4.3 Map - набор ключ-значение, еще называется словарь.
     Map является единственным интерфейсом, который не наследует интерфейс Collection,
@@ -36,13 +36,74 @@
 
 11. Что такое сортировка по принципу Natural Order?
 
-12. Что такое equals и hashcode?
+12. Что такое equals и hashCode?
+// ---------- Если equals и hashCode ДО переопределения ------------------
+12.1 hashcode - число, целое 10-ти значное, в java ограничен целочисленным типом int.
+12.2 Если в классе не переопределен метод equals(), то его исходный код из класса Object такой:
+    public boolean equals(Object obj) {
+        return (this == object)
+    }
+    При сравнении объектов, операция ==, equals возвращает true в одном случае - когда ссылки указывают
+    на один и тот же объект. В данном случае не учитывает содержимое полей.
+    Метод equals класса Object сравнивает ссылки, а не содержимое объектов.
+
+// ---------- Если equals и hashCode ПОСЛЕ переопределения ------------------
+12.3 Метод equals после переопределения у класса:
+     сравнение объектов после переопределения более глубокое, с учетом сравнения полей объектов и ссылок.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BlackBox blackBox = (BlackBox) o;
+        return varA == blackBox.varA &&
+                varB == blackBox.varB;
+    }
+12.4 Метод hashCode после переопределения у класса:
+    @Override
+    public int hashCode() {
+        return Objects.hash(varA, varB); //генерация хэш-кода происходит с учетом полей объекта: varA, varB
+    }
+12.5 Соглашение между equals и hashCode:
+     * Если объекты равны (т.е. equals(Object a) == true), то хэш-коды этих объектов равны,
+     ** Если хэш-коды равны, то вовсе не обязательно, что объекты равны.
 
 13. Какие есть способы перебора всех элементов List?
+13.1 Есть 4 варианта итерации всех элементов: 2 через цикл for, 1 через Iterator, 1 через Stream.
+13.2 Четвертый вариант через Stream:
+        System.out.println("4 Вариант. Обход через Stream:");
+        lists.stream()
+                //.forEach(System.out::print);
+                .forEach(c -> System.out.println(c));
 
 14. Как реализован цикл foreach?
+14.1 Первый вариант обхода списка через цикл for:
+        List<Integer> lists = new ArrayList<>();
+        lists.add(20);
+        lists.add(19);
+        lists.add(18);
+        lists.add(22);
 
+        System.out.println("1 Вариант. Обход всех элементов через цикл for:");
+        for (int i = 0; i < lists.size(); i++) {
+            System.out.println(lists.get(i));
+        }
+
+14.2 Второй вариант через цикл for:
+        System.out.println("2.1 Вариант. Обход всех элементов через цикл for:");
+        for (Object value: lists) {
+           System.out.println(value);
+        }
 15. В чем разница между Iterator?
+15.2 Третий вариант через Iterator:
+        System.out.println("3.3 Вариант. Обход через ListIterator:"); //может ходить в обе стороны: hasNext, hasPrevious, next, previous
+        ListIterator iterator3 = lists.listIterator();
+        while (iterator3.hasNext()) {
+            System.out.println(iterator3.next());
+        }
+15.3 Разница такая, что перебор элементов через цикл for происходит через индекс списка List,
+     + косвено известен размер этого списка или он задается в цикле, получение элемента через метод get().
+     А при использовании итератора Iterator перед получением элемента проверяется его наличие методом hasNext,
+     а получение элемента через метод next().
 
 16. Как происходит удаление элементов из ArrayList?
 
