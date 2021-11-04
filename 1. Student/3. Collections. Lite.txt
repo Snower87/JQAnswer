@@ -122,8 +122,30 @@
     * Удалить элемент по ключу: remove(key).
 
 9. Как задается порядок следования объектов в коллекции, как отсортировать коллекцию?
+9.1 Первый способ:
+    Collections.sort(list);
+9.2 Второй способ:
+    Collections.sort(list, Comparator.reverseOrder());
 
 10. Чем отличается Comparable от Comparator?
+10.1 Если класс реализует этот интерфейс Comparable, то можно использовать потом Collection.sort() или Arrays.sort().
+    Объекты будут сортироваться основываясь на реализации compareTo(Object) метода.
+10.2 При вызове Collection.sort() на коллекции объектов этого класса, они будут сравниваться
+    основываясь на compareTo(Country country).
+    А Comparator используется, чтоб реализовать сортировку по кастомному полю, типо:
+    List<Country> listOfCountries = new ArrayList<Country>();
+    [...]
+    Collections.sort(listOfCountries, new Comparator<Country>() {
+
+          @Override
+         public int compare(Country o1, Country o2) {
+             return o1.getCountryName().compareTo(o2.getCountryName());
+         }
+    });
+    Будут отсортированы объекты основываясь на сравнении имён стран.
+10.3 Если резюмировать, то:
+    Comparable - реализуется внутри класса. По сути, определяет обычный/естественный порядок сравнения объектов.
+    Comparator - реализуется вне класса. Можно реализовать различные варианты сортировки, основанные на сравнении различных полей.
 
 11. Что такое сортировка по принципу Natural Order?
 11.1 Natural Order - сортировка объектов с помощью метода compareTo() интерфейса Comparable.
@@ -170,7 +192,16 @@
                 .forEach(c -> System.out.println(c));
 
 14. Как реализован цикл foreach?
-14.1 Первый вариант обхода списка через цикл for:
+14.1 Код:
+     for(String item : someList)
+           System.out.println(item);
+     равен коду ниже:
+     for (Iterator<E> i = someIterable.iterator(); i.hasNext();) {
+         String item = i.next();
+         System.out.println(item);
+     }
+     Этот код работает для любого объекта, реализующего интерфейс Iterable.
+14.2 Первый вариант обхода списка через цикл for:
         List<Integer> lists = new ArrayList<>();
         lists.add(20);
         lists.add(19);
@@ -182,12 +213,26 @@
             System.out.println(lists.get(i));
         }
 
-14.2 Второй вариант через цикл for:
+14.3 Второй вариант через цикл for:
         System.out.println("2.1 Вариант. Обход всех элементов через цикл for:");
         for (Object value: lists) {
            System.out.println(value);
         }
-15. В чем разница между Iterator?
+
+15. В чем разница между Iterator и Iterable?
+15.1 Реализация Iterable - это тот, который предоставляет Iterator о себе:
+     public interface Iterable<T>
+     {
+         Iterator<T> iterator();
+     }
+     Итератор-это простой способ позволить некоторым перебирать коллекцию данных без привилегий назначения (хотя и с возможностью удаления).
+
+     public interface Iterator<E>
+     {
+         boolean hasNext();
+         E next();
+         void remove();
+     }
 15.2 Третий вариант через Iterator:
         System.out.println("3.3 Вариант. Обход через ListIterator:"); //может ходить в обе стороны: hasNext, hasPrevious, next, previous
         ListIterator iterator3 = lists.listIterator();
