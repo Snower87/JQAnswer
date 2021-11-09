@@ -73,8 +73,17 @@ Stream.of(1, 2, 3, 4, 9).findFirst();
 18. Возможно ли пропустить элемент потока по аналогии с continue?
 
 19. Что такое Optional?
+Optional - новый класс в пакете java.util, является контейнером (оберткой) для значений которая также может безопасно
+содержать null. Благодаря опциональным типам можно забыть про проверки на null и NullPointerException.
 
 20. Перечислите методы Optional?
+1) .isPresent() - возвращает ответ, существует ли искомый объект или нет, в виде Boolean:
+    Boolean present = repository.findById(userId).isPresent();
+Если Вы решили использовать нижеописанный метод get(), то не будет лишним проверить, существует ли данный объект, при помощи этого метода, например:
+    Optional<User> optionalUser = repository.findById(userId);
+    User user = optionalUser.isPresent() ? optionalUser.get() : new User();
+2) .orElse(). Подходит для случаев, когда нам обязательно нужно получить объект, пусть даже и пустой. Код, в таком случае
+    User user = repository.findById(userId).orElse(new User());
 
 21. Расскажите про фабричные методы List.of, Set.of, Map.of?
 
