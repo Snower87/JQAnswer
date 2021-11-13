@@ -69,8 +69,22 @@ findFirst() – вытаскивает первый элемент стрима.
 Stream.of(1, 2, 3, 4, 9).findFirst();
 
 17. Возможно ли прервать выполнение потока по аналогии с break?
+17.1 Stream.of("cat", "dog", "elephant", "fox", "rabbit", "duck")
+        .takeWhile(n -> n.length() % 2 != 0)
+        .forEach(System.out::println);
+17.2 List list = asList("cat", "dog", "elephant", "fox", "rabbit", "duck");
+    for (int i = 0; i < list.size(); i++) {
+        String item = list.get(i);
+        if (item.length() % 2 == 0) {
+            break;
+        }
+        System.out.println(item);
+    }
 
 18. Возможно ли пропустить элемент потока по аналогии с continue?
+Статья: https://stackoverflow.com/questions/23996454/terminate-or-break-java-8-stream-loop
+https://stackoverflow.com/questions/20746429/limit-a-stream-by-a-predicate
+https://www.baeldung.com/java-break-stream-foreach
 
 19. Что такое Optional?
 Optional - новый класс в пакете java.util, является контейнером (оберткой) для значений которая также может безопасно
